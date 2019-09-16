@@ -31,7 +31,7 @@ module.exports = {
             const { categoryid, metadataid, orderlist } = req.body
 
             // get date now
-            const now = new Date()
+            const now = new Date().toISOString()
 
             // set new data to object
             const newplaylist = {
@@ -39,11 +39,14 @@ module.exports = {
                 playlistcategory_id: categoryid,
                 metadata_id: metadataid,
                 order_list: orderlist,
-                created_at: now.toISOString(),
-                updated_at: now.toISOString()
+                created_at: now,
+                updated_at: now
             }
 
-            // check if old data is null or not
+            // check if allplaylists is null or not
+            // if not null, then merged array allplaylists
+            // with object from newplaylists
+            // then in data post, check again for post first time or not
             if(allplaylist !== null) {
                 allplaylist.push(newplaylist)
             }
