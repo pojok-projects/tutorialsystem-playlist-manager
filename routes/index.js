@@ -1,8 +1,8 @@
-const { Playlists } = require('../controller')
+const { PlaylistsController } = require('../controller')
 
 const router = (app) => {
-    app.get('/playlists/:userid', Playlists.index)
-    app.post('/playlists/:userid/create', Playlists.create)
+    app.get('/playlists/:userid', PlaylistsController.index)
+    app.post('/playlists/:userid/create', PlaylistsController.create)
 
     // default error return
     app.all('/*',(req, res) => {

@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const apidbil = process.env.ENDPOINTAPI_DBIL
-const { groupData, pushData } = require('./Helpers')
+const { groupData } = require('./HelpersController')
 
 module.exports = {
     index: async(req, res, next) => {

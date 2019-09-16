@@ -1,5 +1,7 @@
-const Playlists = require('./Playlists')
+const PlaylistsController = require('./PlaylistsController')
+const HelpersController = require('./HelpersController')
 
 module.exports = {
-    Playlists
+    PlaylistsController,
+    HelpersController
 }
