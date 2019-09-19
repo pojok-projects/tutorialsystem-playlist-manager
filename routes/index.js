@@ -18,7 +18,7 @@ mainRouter.use(cors())
 // pm router
 mainRouter.use('/pm', pmRouter)
 
-// default error return
+// default error unknown route fallback
 mainRouter.all('/*',(req, res) => {
     res.status(422).send({
         code: 422,
@@ -28,5 +28,13 @@ mainRouter.all('/*',(req, res) => {
     }) 
 })
 
+// Default Error Fallback
+mainRouter.use(( error , req, res, next) => {
+	return res.status(422).send({ status: {
+        code: 422,
+        message: error.message,
+        succeeded: false
+    }});
+});
 
 module.exports = mainRouter
