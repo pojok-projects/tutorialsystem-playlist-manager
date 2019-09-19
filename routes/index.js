@@ -1,18 +1,32 @@
-const { PlaylistsController } = require('../controller')
+const express = require('express')
+const pmRouter = require('./pm')
 
-const router = (app) => {
-    app.get('/playlists/:userid', PlaylistsController.index)
-    app.post('/playlists/:userid/create', PlaylistsController.create)
+const mainRouter = express()
 
-    // default error return
-    app.all('/*',(req, res) => {
-        res.status(422).send({
-            code: 422,
-            path: req.originalUrl,
-            method: req.method,
-            message: "Invalid Request"
-        }) 
-    })
-}
+// use body parser
+const bodyParser = require('body-parser')
+mainRouter.use(bodyParser.json())
 
-module.exports = router
+// load .env data
+const dotenv = require('dotenv')
+dotenv.config()
+
+// cors
+const cors = require('cors')
+mainRouter.use(cors())
+
+// pm router
+mainRouter.use('/pm', pmRouter)
+
+// default error return
+mainRouter.all('/*',(req, res) => {
+    res.status(422).send({
+        code: 422,
+        path: req.originalUrl,
+        method: req.method,
+        message: "Invalid Request"
+    }) 
+})
+
+
+module.exports = mainRouter
