@@ -13,7 +13,13 @@ module.exports = {
 
             if(axiosReq.status === 200) {
                 const groupByPCID = groupData('playlistcategory_id')
-                res.send(groupByPCID(axiosReq.data.playlists))
+                res.send({
+                    status : {
+                        code: 200,
+                        message: 'success'
+                    },
+                    data: groupByPCID(axiosReq.data.playlists)
+                })
             } else {
                 throw new Error(axiosReq)
             }
@@ -38,8 +44,8 @@ module.exports = {
                 id: uuid(),
                 playlistcategory_id: categoryid,
                 metadata_id: metadataid,
-                order_list: orderlist,
-                last_watch: lastwatch,
+                order_list: orderlist ? orderlist : null,
+                last_watch: lastwatch ? lastwatch : null,
                 created_at: now,
                 updated_at: now
             }
