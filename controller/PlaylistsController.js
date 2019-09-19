@@ -67,5 +67,36 @@ module.exports = {
         } catch (err) {
             next(err)
         }
+    },
+    delete: async(req, res, next) => {
+        try {
+            // get all playlists data
+            const axiosReq = await axios.get(apidbil + '/user/' + req.params.userid)
+            const allplaylist = axiosReq.data.playlists
+
+            // Get id
+            const playlistsid = req.params.playlistsid
+            
+            // find playlists id
+            const findplaylists = allplaylist.filter((items) => {
+                return items.id !== playlistsid
+            })
+
+            // update playlists
+            const PostData = await axios({
+                method: 'POST',
+                url: apidbil + '/user/update/' + req.params.userid,
+                headers: {
+                    accept: "application/json"
+                },
+                data: {
+                    playlists: findplaylists
+                }
+            })
+
+            res.json(PostData.data)
+        } catch (err) {
+            next(err)
+        }
     }
 }
