@@ -28,7 +28,7 @@ module.exports = {
             const allplaylist = axiosReq.data.playlists
 
             // get form input
-            const { categoryid, metadataid, orderlist } = req.body
+            const { categoryid, metadataid, orderlist, lastwatch } = req.body
 
             // get date now
             const now = new Date().toISOString()
@@ -39,8 +39,19 @@ module.exports = {
                 playlistcategory_id: categoryid,
                 metadata_id: metadataid,
                 order_list: orderlist,
+                last_watch: lastwatch,
                 created_at: now,
                 updated_at: now
+            }
+
+            // check if duplicate data in playlists
+            // find metadata_id and playlistcategory_id
+            const findplaylists = allplaylist.filter((items) => {
+                return (items.metadata_id === metadataid && items.playlistcategory_id === categoryid)
+            })
+
+            if(findplaylists.length > 0) {
+                throw new Error('Skip, Duplicated Data')
             }
 
             // check if allplaylists is null or not
@@ -60,6 +71,65 @@ module.exports = {
                 },
                 data: {
                     playlists: allplaylist ? allplaylist : [newplaylist]
+                }
+            })
+
+            res.json(PostData.data)
+        } catch (err) {
+            next(err)
+        }
+    },
+    update: async(req, res,next) => {
+        try {
+            // get all playlists data
+            const axiosReq = await axios.get(apidbil + '/user/' + req.params.userid)
+            const allplaylist = axiosReq.data.playlists
+
+            // Get id
+            const playlistsid = req.params.playlistsid
+
+            // get form input
+            const { categoryid, metadataid, orderlist, lastwatch } = req.body
+
+            // get date now
+            const now = new Date().toISOString()
+
+            // find playlists index key
+            let findplaylists = allplaylist.findIndex(items => items.id === playlistsid)
+
+            // update based key
+            // update playlistcategory_id if not null
+            if(categoryid !== null) {
+                allplaylist[findplaylists].playlistcategory_id = categoryid
+            }
+
+            // update metadata_id if not null
+            if(metadataid !== null) {
+                allplaylist[findplaylists].metadata_id = metadataid
+            }
+
+            // update order_list if not null
+            if(orderlist !== null) {
+                allplaylist[findplaylists].order_list = orderlist
+            }
+
+            // update last_watch if not null
+            if(lastwatch !== null) {
+                allplaylist[findplaylists].last_watch = lastwatch
+            }
+
+            // update updated_at time now
+            allplaylist[findplaylists].updated_at = now
+
+            // update playlists
+            const PostData = await axios({
+                method: 'POST',
+                url: apidbil + '/user/update/' + req.params.userid,
+                headers: {
+                    accept: "application/json"
+                },
+                data: {
+                    playlists: allplaylist
                 }
             })
 
