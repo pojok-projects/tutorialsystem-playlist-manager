@@ -6,11 +6,11 @@ dotenv.config()
 const apidbil = process.env.ENDPOINTAPI_DBIL
 
 module.exports = {
-    index: async(req, res, next) => {
+    index: async (req, res, next) => {
         try {
-            const axiosReq = await axios.get(apidbil + '/content/playlists/category')
+            const axiosReq = await axios.get(apidbil + 'content/playlists/category')
 
-            if(axiosReq.status === 200) {
+            if (axiosReq.status === 200) {
                 res.send(axiosReq.data)
             } else {
                 throw new Error(axiosReq)
@@ -19,10 +19,15 @@ module.exports = {
             next(err)
         }
     },
-    create: async(req, res, next) => {
+    create: async (req, res, next) => {
         try {
             // get form input
-            const { userid, title, description, status } = req.body
+            const {
+                userid,
+                title,
+                description,
+                status
+            } = req.body
 
             const newData = {
                 user_id: userid,
@@ -46,11 +51,11 @@ module.exports = {
             next(err)
         }
     },
-    show: async(req, res, next) => {
+    show: async (req, res, next) => {
         try {
-            const axiosReq = await axios.get(apidbil + '/content/playlists/category/' + req.params.id)
+            const axiosReq = await axios.get(apidbil + 'content/playlists/category/' + req.params.id)
 
-            if(axiosReq.status === 200) {
+            if (axiosReq.status === 200) {
                 res.send(axiosReq.data)
             } else {
                 throw new Error(axiosReq)
@@ -59,15 +64,17 @@ module.exports = {
             next(err)
         }
     },
-    search: async(req, res, next) => {
+    search: async (req, res, next) => {
         try {
             // get form input
-            const { title } = req.body
+            const {
+                title
+            } = req.body
 
             // send post
             const PostData = await axios({
                 method: 'POST',
-                url: apidbil + '/content/playlists/category/search',
+                url: apidbil + 'content/playlists/category/search',
                 headers: {
                     accept: "application/json"
                 },
@@ -81,15 +88,20 @@ module.exports = {
             next(err)
         }
     },
-    update: async(req, res, next) => {
+    update: async (req, res, next) => {
         try {
             // get form input
-            const { userid, title, description, status } = req.body
+            const {
+                userid,
+                title,
+                description,
+                status
+            } = req.body
 
             // send post
             const PostData = await axios({
                 method: 'POST',
-                url: apidbil + '/content/playlists/category/update' + req.params.id,
+                url: apidbil + 'content/playlists/category/update' + req.params.id,
                 headers: {
                     accept: "application/json"
                 },
@@ -106,12 +118,12 @@ module.exports = {
             next(err)
         }
     },
-    delete: async(req, res, next) => {
+    delete: async (req, res, next) => {
         try {
             // send post
             const PostData = await axios({
                 method: 'POST',
-                url: apidbil + '/content/playlists/category/delete' + req.params.id,
+                url: apidbil + 'content/playlists/category/delete' + req.params.id,
                 headers: {
                     accept: "application/json"
                 }
