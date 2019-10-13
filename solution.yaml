@@ -76,7 +76,7 @@ Resources:
       Description: Playlist Manager - Lambda
       Runtime: nodejs10.x
       Role: !Sub ${rPlaylistManagerLambdaExecutionRole.Arn}
-      Code: .webpack
+      Code: ./
       Handler: lambda.handler
       MemorySize: 256
       Timeout: 900
