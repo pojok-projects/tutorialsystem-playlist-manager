@@ -9,3 +9,5 @@ app.use('/', mainRouter)
 app.listen(process.env.PORT, () => {
     console.log('server running at port', process.env.PORT)
 })
+
+module.exports = app;
