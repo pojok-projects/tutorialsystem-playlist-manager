@@ -21,7 +21,7 @@ Represents Playlists Category of Videos.
 **Requests Tables:**
 | Parameter     | type   | Status   | Description                               |
 | ------------- | ------ | -------- | ----------------------------------------- |
-| `user_id`     | string | required | User ID                                   |
+| `userid`      | string | required | User ID                                   |
 | `title`       | string | required | title of content playlists category       |
 | `description` | string | required | description of content playlists category |
 | `status`      | string | required | `publik|user|pribadi`                     |
@@ -30,7 +30,7 @@ Represents Playlists Category of Videos.
 | URL                    | Method | INFO              |
 | ---------------------- | ------ | ----------------- |
 | `category`             | GET    | Get All Data      |
-| `category/store`       | POST   | Save Data         |
+| `category/create`      | POST   | Save Data         |
 | `category/{id}`        | GET    | Get Data by ID    |
 | `category/search`      | POST   | Search Data Query |
 | `category/update/{id}` | POST   | Update Data by ID |
@@ -60,12 +60,12 @@ Represents Playlists Category of Videos.
         }
 
 
-### Save Data [POST /category/store]
+### Save Data [POST /category/create]
 
 + Request (application/json)
 
         {
-            "user_id": 123,
+            "userid": 123,
             "title": "Tutorial Node JS Untuk Pemula",
             "description": "Step By Step Membuat Node JS",
             "status": "publik"
@@ -230,7 +230,7 @@ Represents Playlists of Videos.
         }
 
 
-### Save Data [POST /playlists/{userid}/store]
+### Save Data [POST /playlists/{userid}/create]
 
 + Parameter
     + userid: `5cb552a7-163c-4bec-b9f0-b05a895ffe3d` (string, required) - Id of User
