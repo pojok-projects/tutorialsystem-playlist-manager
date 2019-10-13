@@ -5,6 +5,15 @@ const app = express()
 const mainRouter = require('./routes')
 app.use('/', mainRouter)
 
+app.use((_req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept'
+    );
+    next();
+});
+
 // jalankan nodejs di port sesuai ENV
 app.listen(process.env.PORT, () => {
     console.log('server running at port', process.env.PORT)
