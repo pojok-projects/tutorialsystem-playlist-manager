@@ -101,7 +101,7 @@ module.exports = {
             // send post
             const PostData = await axios({
                 method: 'POST',
-                url: apidbil + 'content/playlists/category/update' + req.params.id,
+                url: apidbil + 'content/playlists/category/update/' + req.params.id,
                 headers: {
                     accept: "application/json"
                 },
@@ -123,7 +123,7 @@ module.exports = {
             // send post
             const PostData = await axios({
                 method: 'POST',
-                url: apidbil + 'content/playlists/category/delete' + req.params.id,
+                url: apidbil + 'content/playlists/category/delete/' + req.params.id,
                 headers: {
                     accept: "application/json"
                 }
