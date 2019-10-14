@@ -15,8 +15,10 @@ app.use((_req, res, next) => {
 });
 
 // jalankan nodejs di port sesuai ENV
-app.listen(process.env.PORT, () => {
-    console.log('server running at port', process.env.PORT)
-})
+if(process.env.PORT) {
+    app.listen(process.env.PORT, () => {
+        console.log('server running at port', process.env.PORT)
+    })
+}
 
 module.exports = app;

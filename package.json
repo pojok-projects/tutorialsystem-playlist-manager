@@ -5,6 +5,11 @@
   "repository": "git@github.com:JuniYadi/tutorialsystem-playlist-manager.git",
   "author": "Juni Yadi <juniyadi94@gmail.com>",
   "license": "MIT",
+  "nodemonConfig": {
+    "env": {
+      "PORT": 8000
+    }
+  },
   "scripts": {
     "dev": "nodemon index.js"
   },
