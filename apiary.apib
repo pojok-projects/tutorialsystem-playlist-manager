@@ -186,12 +186,85 @@ Represents Playlists of Videos.
 **Table Routes:**
 | URL                                       | Method | INFO              |
 | ----------------------------------------- | ------ | ----------------- |
+| `playlists/`                              | GET    | Get Data by ID    |
 | `playlists/{userid}`                      | GET    | Get Data by ID    |
 | `playlists/{userid}/create`               | POST   | Save Data         |
 | `playlists/{userid}/update/{playlistsid}` | POST   | Update Data by ID |
 | `playlists/{userid}/delete/{playlistsid}` | POST   | Delete Data by ID |
 
-### Get All Data [GET /playlists/{userid}]
+### Get All Data Playlists [GET /playlists/]
+
+**Available params (Optional)**
+`?limit=10` for limit output result
+
++ Response 200 (application/json)
+
+        {
+        "status": {
+            "code": 200,
+            "success": true
+        },
+        "data": [
+            {
+            "category": {
+                "updated_at": "2019-10-13T16:14:51+00:00",
+                "user_id": "5cb552a7-163c-4bec-b9f0-b05a895ffe3d",
+                "created_at": "2019-10-13T16:14:51+00:00",
+                "status": "publik",
+                "description": "Step By Step Membuat Node JS",
+                "id": "827818b6-c7ab-40c4-94bf-3cd52563d480",
+                "title": "Tutorial Node JS Untuk Pemula"
+            },
+            "lists": [
+                {
+                "updated_at": "2019-10-16T03:33:56.060Z",
+                "metadata_id": "97be1b21-c30a-40f0-8837-42b461f1e97f",
+                "created_at": "2019-10-16T03:33:56.060Z",
+                "id": "0a2d17c6-31d3-46fc-a1ec-1acb36c46875",
+                "playlistcategory_id": "827818b6-c7ab-40c4-94bf-3cd52563d480",
+                "last_watch": null,
+                "order_list": null
+                }
+            ]
+            },
+            {
+            "category": {
+                "updated_at": "2019-10-16T03:34:32+00:00",
+                "user_id": "5cb552a7-163c-4bec-b9f0-b05a895ffe3d",
+                "created_at": "2019-10-16T03:34:32+00:00",
+                "status": "publik",
+                "description": "Tutorial Tahap Lanjutan Node JS",
+                "id": "f7f23759-8efa-4924-9bbd-96c220d65c92",
+                "title": "Tutorial Node JS Untuk Advance"
+            },
+            "lists": [
+                {
+                "updated_at": "2019-10-16T03:34:43.021Z",
+                "metadata_id": "97be1b21-c30a-40f0-8837-42b461f1e97f",
+                "created_at": "2019-10-16T03:34:43.021Z",
+                "id": "2374bb34-f74a-4bf7-a66b-012248c27309",
+                "playlistcategory_id": "f7f23759-8efa-4924-9bbd-96c220d65c92",
+                "last_watch": null,
+                "order_list": null
+                },
+                {
+                "updated_at": "2019-10-16T03:47:43.157Z",
+                "metadata_id": "9afa752a-a5e5-4d06-8992-64a0dd4d7e96",
+                "created_at": "2019-10-16T03:47:43.157Z",
+                "id": "acf0f74f-7e7f-4ce8-ba07-9d940f255371",
+                "playlistcategory_id": "f7f23759-8efa-4924-9bbd-96c220d65c92",
+                "last_watch": null,
+                "order_list": null
+                }
+            ]
+            }
+        ]
+        }
+
+### Get All Data by UserID [GET /playlists/{userid}]
+
+**Available params (Optional)**
+`?category=PlaylistsCategoryID` for get result by spesifict playlists category ID
 
 **Key as Playlists Category ID**
 
