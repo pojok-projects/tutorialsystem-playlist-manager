@@ -16,14 +16,25 @@ const getCategory = async (idcategory) => {
     }
 }
 
-const getPlaylists = async (userid) => {
+const getPlaylists = async (userid, categoryid) => {
     const axiosReq = await axios.get(apidbil + 'user/' + userid)
 
     if(axiosReq.status === 200) {
         const allplaylist = axiosReq.data.playlists
 
         if(allplaylist !== null) {
-            const grsoData =  _.groupBy(_.sortBy(axiosReq.data.playlists, 'order_list'), 'playlistcategory_id');
+            const orderData = _.sortBy(axiosReq.data.playlists, 'order_list')
+
+            let grsoData = null
+            if(categoryid) {
+                grsoData =  _.filter(orderData, (items) => {
+                    if(items.playlistcategory_id == categoryid) {
+                        return items
+                    }
+                });
+            } else {
+                grsoData =  _.groupBy(orderData, 'playlistcategory_id');
+            }
 
             return grsoData
         } else {
@@ -67,7 +78,7 @@ module.exports = {
             // loop user to get playlists
             for(let i = 0; i < maxuser.length; i++) {
                 // get playlists grouped by playlists category
-                const newPlay = await getPlaylists(maxuser[i])
+                const newPlay = await getPlaylists(maxuser[i], null)
 
                 // get key group playlists category
                 const playkey = _.keys(newPlay)
@@ -107,7 +118,15 @@ module.exports = {
     },
     show: async (req, res, next) => {
         try {
-            const dataPlaylists = await getPlaylists(req.params.userid)
+            let dataPlaylists = null
+
+            // check category has been set
+            const { category } = req.query
+            if(category) {
+                dataPlaylists = await getPlaylists(req.params.userid, category)
+            } else {
+                dataPlaylists = await getPlaylists(req.params.userid)
+            }
 
             res.send({
                 status : {
