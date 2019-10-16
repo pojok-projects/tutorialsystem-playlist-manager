@@ -6,30 +6,116 @@ dotenv.config()
 
 const apidbil = process.env.ENDPOINTAPI_DBIL
 
+const getCategory = async (idcategory) => {
+    const axiosReq = await axios.get(apidbil + 'content/playlists/category/' + idcategory)
+
+    if (axiosReq.status == 200) {
+        return axiosReq.data
+    } else {
+        throw new Error('axiosReq')
+    }
+}
+
+const getPlaylists = async (userid) => {
+    const axiosReq = await axios.get(apidbil + 'user/' + userid)
+
+    if(axiosReq.status === 200) {
+        const allplaylist = axiosReq.data.playlists
+
+        if(allplaylist !== null) {
+            const grsoData =  _.groupBy(_.sortBy(axiosReq.data.playlists, 'order_list'), 'playlistcategory_id');
+
+            return grsoData
+        } else {
+            throw new Error('Playlists Not Found..!!')
+        }
+    } else {
+        throw new Error(axiosReq)
+    }
+}
+
 module.exports = {
-    index: async(req, res, next) => {
+    index: async ( req, res, next) => {
         try {
-            const axiosReq = await axios.get(apidbil + 'user/' + req.params.userid)
+            const axiosReq = await axios.get(apidbil + 'user')
 
-                if(axiosReq.status === 200) {
-                    const allplaylist = axiosReq.data.playlists
-
-                    if(allplaylist !== null) {
-                        const grsoData =  _.groupBy(_.sortBy(axiosReq.data.playlists, 'order_list'), 'playlistcategory_id');
-
-                        res.send({
-                            status : {
-                                code: 200,
-                                message: 'success'
-                            },
-                            data: grsoData
-                        })
-                    } else {
-                        throw new Error('Playlists Not Found..!!')
-                    }
-                } else {
-                    throw new Error(axiosReq)
+            // filter for playlists not empty
+            const playlists = _.filter(axiosReq.data.result, (items) => {
+                if(items.playlists != null) {
+                    return items
                 }
+            })
+
+            // get userid
+            const userid = _.shuffle(_.pluck(playlists, 'id'))
+            
+            // default limit value
+            let limitList = 12
+
+            // if limit in body has been set, then return based limit on body
+            const { limit } = req.body
+            if(limit) {
+                limitList = req.body.limit
+            }
+
+            // limit output
+            const maxuser = _.sample(userid, limitList)
+
+            // variable for save all playlists
+            let dataPlaylists = []
+
+            // loop user to get playlists
+            for(let i = 0; i < maxuser.length; i++) {
+                // get playlists grouped by playlists category
+                const newPlay = await getPlaylists(maxuser[i])
+
+                // get key group playlists category
+                const playkey = _.keys(newPlay)
+
+                // get value group playlists category
+                const playval = _.values(newPlay)
+
+                // make variable for index playlists
+                let newIndexPlay = null
+
+                // loop playlists category
+                for(let n = 0; n < playkey.length; n++) {
+                    // get playlists category data based id
+                    const newCate = await getCategory(playkey[n])
+
+                    // make new object for category and the list
+                    newIndexPlay = {
+                        category: newCate,
+                        lists: playval[n] // only show playlists with same key
+                    }
+
+                    // push array
+                    dataPlaylists.push(newIndexPlay)
+                }
+            }
+
+            res.send({
+                status : {
+                    code: 200,
+                    success: true
+                },
+                data: dataPlaylists
+            })
+        } catch (err) {
+            next(err)
+        }
+    },
+    show: async (req, res, next) => {
+        try {
+            const dataPlaylists = await getPlaylists(req.params.userid)
+
+            res.send({
+                status : {
+                    code: 200,
+                    success: true
+                },
+                data: dataPlaylists
+            })
         } catch (err) {
             next(err)
         }
