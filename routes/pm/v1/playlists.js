@@ -2,7 +2,7 @@ const playlists = require('express').Router()
 
 const { PlaylistsController } = require('../../../controller')
 
-playlists.post('/', PlaylistsController.index)
+playlists.get('/', PlaylistsController.index)
 playlists.get('/:userid', PlaylistsController.show)
 playlists.post('/:userid/create', PlaylistsController.create)
 playlists.post('/:userid/update/:playlistsid', PlaylistsController.update)

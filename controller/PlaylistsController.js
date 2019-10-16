@@ -53,9 +53,9 @@ module.exports = {
             let limitList = 12
 
             // if limit in body has been set, then return based limit on body
-            const { limit } = req.body
+            const { limit } = req.query
             if(limit) {
-                limitList = req.body.limit
+                limitList = limit
             }
 
             // limit output
