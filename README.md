@@ -18,6 +18,7 @@ Playlists Manager For List All of Video and List by Category
 
 | URL                                       | Method | INFO              |
 | ----------------------------------------- | ------ | ----------------- |
+| `playlists`                               | GET    | Get All Data      |
 | `playlists/{userid}`                      | GET    | Get Data by ID    |
 | `playlists/{userid}/create`               | POST   | Save Data         |
 | `playlists/{userid}/update/{playlistsid}` | POST   | Update Data by ID |
