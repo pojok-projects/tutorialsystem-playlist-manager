@@ -85,7 +85,6 @@ Resources:
       Environment:
         Variables:
           ENDPOINTAPI_DBIL: !Sub ${pEndpointApi}
-          PORT: 3000
 
   rApiGatewayRole:
     Type: AWS::IAM::Role

@@ -19,21 +19,21 @@ const getCategory = async (idcategory) => {
 const getPlaylists = async (userid, categoryid) => {
     const axiosReq = await axios.get(apidbil + 'user/' + userid)
 
-    if(axiosReq.status === 200) {
+    if (axiosReq.status === 200) {
         const allplaylist = axiosReq.data.playlists
 
-        if(allplaylist !== null) {
+        if (allplaylist !== null) {
             const orderData = _.sortBy(axiosReq.data.playlists, 'order_list')
 
             let grsoData = null
-            if(categoryid) {
-                grsoData =  _.filter(orderData, (items) => {
-                    if(items.playlistcategory_id == categoryid) {
+            if (categoryid) {
+                grsoData = _.filter(orderData, (items) => {
+                    if (items.playlistcategory_id == categoryid) {
                         return items
                     }
                 });
             } else {
-                grsoData =  _.groupBy(orderData, 'playlistcategory_id');
+                grsoData = _.groupBy(orderData, 'playlistcategory_id');
             }
 
             return grsoData
@@ -46,26 +46,28 @@ const getPlaylists = async (userid, categoryid) => {
 }
 
 module.exports = {
-    index: async ( req, res, next) => {
+    index: async (req, res, next) => {
         try {
             const axiosReq = await axios.get(apidbil + 'user')
 
             // filter for playlists not empty
             const playlists = _.filter(axiosReq.data.result, (items) => {
-                if(items.playlists != null) {
+                if (items.playlists != null) {
                     return items
                 }
             })
 
             // get userid
             const userid = _.shuffle(_.pluck(playlists, 'id'))
-            
+
             // default limit value
             let limitList = 12
 
             // if limit in body has been set, then return based limit on body
-            const { limit } = req.query
-            if(limit) {
+            const {
+                limit
+            } = req.query
+            if (limit) {
                 limitList = limit
             }
 
@@ -76,7 +78,7 @@ module.exports = {
             let dataPlaylists = []
 
             // loop user to get playlists
-            for(let i = 0; i < maxuser.length; i++) {
+            for (let i = 0; i < maxuser.length; i++) {
                 // get playlists grouped by playlists category
                 const newPlay = await getPlaylists(maxuser[i], null)
 
@@ -90,23 +92,25 @@ module.exports = {
                 let newIndexPlay = null
 
                 // loop playlists category
-                for(let n = 0; n < playkey.length; n++) {
-                    // get playlists category data based id
-                    const newCate = await getCategory(playkey[n])
+                for (let n = 0; n < playkey.length; n++) {
+                    if (playkey[n] !== 'null') {
+                        // get playlists category data based id
+                        const newCate = await getCategory(playkey[n])
 
-                    // make new object for category and the list
-                    newIndexPlay = {
-                        category: newCate,
-                        lists: playval[n] // only show playlists with same key
+                        // make new object for category and the list
+                        newIndexPlay = {
+                            category: newCate,
+                            lists: playval[n] // only show playlists with same key
+                        }
+
+                        // push array
+                        dataPlaylists.push(newIndexPlay)
                     }
-
-                    // push array
-                    dataPlaylists.push(newIndexPlay)
                 }
             }
 
             res.send({
-                status : {
+                status: {
                     code: 200,
                     success: true
                 },
@@ -121,15 +125,17 @@ module.exports = {
             let dataPlaylists = null
 
             // check category has been set
-            const { category } = req.query
-            if(category) {
+            const {
+                category
+            } = req.query
+            if (category) {
                 dataPlaylists = await getPlaylists(req.params.userid, category)
             } else {
                 dataPlaylists = await getPlaylists(req.params.userid)
             }
 
             res.send({
-                status : {
+                status: {
                     code: 200,
                     success: true
                 },
@@ -139,14 +145,19 @@ module.exports = {
             next(err)
         }
     },
-    create: async(req, res, next) => {
+    create: async (req, res, next) => {
         try {
             // get all playlists data
             const axiosReq = await axios.get(apidbil + 'user/' + req.params.userid)
             const allplaylist = axiosReq.data.playlists
 
             // get form input
-            const { categoryid, metadataid, orderlist, lastwatch } = req.body
+            const {
+                categoryid,
+                metadataid,
+                orderlist,
+                lastwatch
+            } = req.body
 
             // get date now
             const now = new Date().toISOString()
@@ -162,7 +173,7 @@ module.exports = {
                 updated_at: now
             }
 
-            if(allplaylist !== null) {
+            if (allplaylist !== null) {
 
                 // check if duplicate data in playlists
                 // find metadata_id and playlistcategory_id
@@ -170,7 +181,7 @@ module.exports = {
                     return (items.metadata_id === metadataid && items.playlistcategory_id === categoryid)
                 })
 
-                if(findplaylists.length > 0) {
+                if (findplaylists.length > 0) {
                     throw new Error('Skip, Duplicated Data')
                 }
 
@@ -198,13 +209,13 @@ module.exports = {
             next(err)
         }
     },
-    update: async(req, res,next) => {
+    update: async (req, res, next) => {
         try {
             // get all playlists data
             const axiosReq = await axios.get(apidbil + 'user/' + req.params.userid)
             const allplaylist = axiosReq.data.playlists
 
-            if(allplaylist == null) {
+            if (allplaylist == null) {
                 throw new Error('Unable update data, data not found..!!')
             }
 
@@ -212,7 +223,12 @@ module.exports = {
             const playlistsid = req.params.playlistsid
 
             // get form input
-            const { categoryid, metadataid, orderlist, lastwatch } = req.body
+            const {
+                categoryid,
+                metadataid,
+                orderlist,
+                lastwatch
+            } = req.body
 
             // get date now
             const now = new Date().toISOString()
@@ -253,7 +269,7 @@ module.exports = {
             next(err)
         }
     },
-    delete: async(req, res, next) => {
+    delete: async (req, res, next) => {
         try {
             // get all playlists data
             const axiosReq = await axios.get(apidbil + 'user/' + req.params.userid)
@@ -261,8 +277,8 @@ module.exports = {
 
             // Get id
             const playlistsid = req.params.playlistsid
-            
-            if(allplaylist == null) {
+
+            if (allplaylist == null) {
                 throw new Error('Unable delete data, data not found..!!')
             }
 
